@@ -117,7 +117,7 @@ Laravelを使用して作成した書籍管理アプリケーションです。
 
 `./vendor/bin/sail artisan app:update-overdue-reading-plans`
 
-読書計画のリマインダー通知を送信します。
+翌日が目標日の読書計画（予定中）を対象に、リマインダー通知を送信します。
 
 `./vendor/bin/sail artisan app:send-reading-plan-reminders`
 
