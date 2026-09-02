@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('app:update-overdue-reading-plans')->daily();
+        $schedule->command('app:send-reading-plan-reminders')->daily();
     }
 
     /**

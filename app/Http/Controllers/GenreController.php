@@ -13,8 +13,7 @@ class GenreController extends Controller
      */
     public function index()
     {
-        // データベースからジャンルをすべて取得する
-        $genres = Genre::all();
+        $genres = Genre::withCount('books')->get();
 
         // 取得したジャンル一覧を画面に渡す
         return view('genres.index', compact('genres'));
@@ -41,7 +40,7 @@ class GenreController extends Controller
         Genre::create($validated);
 
        // ジャンル一覧画面へ戻る
-        return redirect()->route('genres.index');
+        return redirect()->route('genres.index')->with('success', 'ジャンルを登録しました');
     }
 
     /**
@@ -49,7 +48,14 @@ class GenreController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // 指定されたジャンルを取得する
+        $genre = Genre::findOrFail($id);
+
+        // そのジャンルに紐づく書籍を取得する
+        $books = $genre->books()->with('genres')->paginate(10);
+
+        // ジャンル別の書籍一覧画面にデータを渡す
+        return view('genres.show', compact('genre', 'books'));
     }
 
     /**
@@ -79,7 +85,7 @@ class GenreController extends Controller
         $genre->update($validated);
 
         // ジャンル一覧画面へ戻る
-        return redirect()->route('genres.index');
+        return redirect()->route('genres.index')->with('success', 'ジャンルを更新しました');
     }
 
     /**
@@ -87,6 +93,13 @@ class GenreController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // 削除するジャンルを取得する
+        $genre = Genre::findOrFail($id);
+
+        // ジャンルを削除する
+        $genre->delete();
+
+        // ジャンル一覧画面へ戻る
+        return redirect()->route('genres.index')->with('success', 'ジャンルを削除しました');
     }
 }

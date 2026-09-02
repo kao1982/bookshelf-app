@@ -78,8 +78,8 @@
                 });
                 const data = await response.json();
 
-                if (data.error) {
-                    errorEl.textContent = data.error;
+                if (data.message) {
+                    errorEl.textContent = data.message;
                     errorEl.classList.remove('hidden');
                 } else {
                     document.getElementById('title').value = data.title || '';

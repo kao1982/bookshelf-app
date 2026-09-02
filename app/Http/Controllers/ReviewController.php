@@ -67,6 +67,7 @@ class ReviewController extends Controller
     */
     public function edit(Review $review)
     {
+        $this->authorize('update', $review);
         // 編集対象のレビューを取得して編集画面へ渡す
         return view('reviews.edit', compact('review'));
     }
@@ -79,7 +80,7 @@ class ReviewController extends Controller
     */
     public function update(ReviewRequest $request, Review $review)
     {
-
+        $this->authorize('update', $review);
         // レビューを更新
         $review->update([
             'rating' => $request->rating,
@@ -100,6 +101,7 @@ class ReviewController extends Controller
     */
     public function destroy(Review $review)
     {
+        $this->authorize('delete', $review);
         // レビューを削除
         $review->delete();
 

@@ -33,6 +33,12 @@ class BookIndexRequest extends FormRequest
 
             // 1ページあたりの件数：入力がなくてもOK、整数、10～100
             'per_page' => 'nullable|integer|between:10,100',
+
+            // 並び順：入力がなくてもOK、指定された4種類のみ
+            'sort' => 'nullable|in:latest,oldest,title,rating',
+
+            // 並び順：入力がなくてもOK、指定された値のみ
+            'sort' => 'nullable|in:latest,oldest,title,rating',
         ];
     }
     /**

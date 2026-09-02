@@ -17,9 +17,11 @@ class FavoriteController extends Controller
         // すでにお気に入り登録済みなら削除
         if ($user->favoriteBooks->contains($book->id)) {
             $user->favoriteBooks()->detach($book->id);
+            session()->flash('success', 'お気に入りから削除しました');
         } else {
             // 未登録なら追加
             $user->favoriteBooks()->attach($book->id);
+            session()->flash('success', 'お気に入りに登録しました');
         }
 
         return back();
@@ -29,10 +31,10 @@ class FavoriteController extends Controller
      */
     public function index()
     {
-        $favorites = auth()->user()
+        $books = auth()->user()
             ->favoriteBooks()
             ->paginate(10);
 
-        return view('favorites.index', compact('favorites'));
+        return view('favorites.index', compact('books'));
     }
 }

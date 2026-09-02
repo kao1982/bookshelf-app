@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,11 +20,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/v1/login', [AuthController::class, 'login']);
+
 // 公開API：書籍一覧を取得
-Route::get('/books', [BookController::class, 'index']);
+Route::get('/v1/books', [BookController::class, 'index']);
 
 // 公開API：書籍詳細を取得
-Route::get('/books/{book}', [BookController::class, 'show']);
+Route::get('/v1/books/{book}', [BookController::class, 'show']);
 
 // 公開API：書籍を新規登録
-Route::post('/books', [BookController::class, 'store']);
+Route::middleware('auth:sanctum')->post('/v1/books', [BookController::class, 'store']);
+
+// 公開API：書籍を更新
+Route::middleware('auth:sanctum')->put('/v1/books/{book}', [BookController::class, 'update']);
+
+// 公開API：書籍を削除
+Route::middleware('auth:sanctum')->delete('/v1/books/{book}', [BookController::class, 'destroy']);

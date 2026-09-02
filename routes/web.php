@@ -6,6 +6,10 @@ use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReadingPlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,8 +24,14 @@ use App\Http\Controllers\GenreController;
 
 Route::get('/', [BookController::class, 'index']);
 
+Route::get('/books/isbn/{isbn}', [BookController::class, 'isbn']);
 
-Route::resource('books', BookController::class);
+Route::middleware('auth')->group(function () { Route::get('/books/create', [BookController::class, 'create'])->name('books.create'); Route::post('/books', [BookController::class, 'store'])->name('books.store'); Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit'); Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update'); Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy'); });
+
+Route::resource('books', BookController::class)->except(['create', 'store', 'edit', 'update', 'destroy']);
+
+Route::get('/ranking', [RankingController::class, 'index'])
+    ->name('ranking.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,6 +41,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/favorites', [FavoriteController::class, 'index'])
         ->name('favorites.index');
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/reports', [ReportController::class, 'index'])
+    ->name('reports.index');
+
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
     Route::post('/books/{book}/favorite', [FavoriteController::class, 'toggle'])
         ->name('favorites.toggle');
     Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
@@ -49,7 +66,25 @@ Route::middleware('auth')->group(function () {
         ->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
+    Route::get('/reading-plans', [ReadingPlanController::class, 'index'])
+    ->name('reading-plans.index');
+
+    Route::get('/reading-plans/create', [ReadingPlanController::class, 'create'])
+        ->name('reading-plans.create');
+
+    Route::post('/reading-plans', [ReadingPlanController::class, 'store'])
+        ->name('reading-plans.store');
+
+    Route::post('/reading-plans/{readingPlan}/complete', [ReadingPlanController::class, 'complete'])
+        ->name('reading-plans.complete');
+    Route::get('/reading-plans/{readingPlan}/edit', [ReadingPlanController::class, 'edit'])
+        ->name('reading-plans.edit');
+    Route::put('/reading-plans/{readingPlan}', [ReadingPlanController::class, 'update'])
+        ->name('reading-plans.update');
+    Route::delete('/reading-plans/{readingPlan}', [ReadingPlanController::class, 'destroy'])
+        ->name('reading-plans.destroy');
     Route::resource('genres', GenreController::class);
+
 });
 
 require __DIR__.'/auth.php';

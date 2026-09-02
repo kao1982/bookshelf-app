@@ -1,66 +1,137 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BookShelf
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
 
-## About Laravel
+Laravelを使用して作成した書籍管理アプリケーションです。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+書籍の登録・編集・削除、検索・並び替え・ページネーション、お気に入り、レビュー、ジャンル管理、ランキング、読書計画、読書レポートなどの機能を実装しています。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+また、Google Books APIを利用したISBN検索、Laravel SanctumによるAPI認証、認可機能、読書計画に関する通知・バッチ処理・スケジュール実行も実装しています。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 主な機能
 
-## Learning Laravel
+- ユーザー登録・ログイン
+- 書籍一覧・詳細表示
+- 書籍の登録・編集・削除
+- 書籍検索
+- 書籍の並び替え
+- ページネーション
+- Google Books APIを利用したISBN検索
+- お気に入り登録・解除
+- レビュー投稿・編集・削除
+- ジャンル管理
+- 書籍ランキング
+- 読書計画の作成・編集・削除・完了
+- 読書計画の期限超過管理
+- 読書計画のリマインダー通知
+- マイ読書レポート
+- Laravel SanctumによるAPI認証
+- APIでの書籍CRUD
+- Policyによる認可
+- PHPUnitによるテスト
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ER図
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+![ER図](public/images/database.png)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 環境構築
 
-## Laravel Sponsors
+### 1. リポジトリをクローン
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+`git clone git@github.com:kao1982/bookshelf-app.git`
 
-### Premium Partners
+`cd bookshelf-app`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 2. `.env`を設定
 
-## Contributing
+`.env.example`をコピーして`.env`を作成します。
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+`cp .env.example .env`
 
-## Code of Conduct
+必要に応じてデータベースやGoogle Books APIなどの設定を行います。
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Composerパッケージをインストール
 
-## Security Vulnerabilities
+`composer install`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Laravel Sailを起動
 
-## License
+`./vendor/bin/sail up -d`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. アプリケーションキーを生成
+
+`./vendor/bin/sail artisan key:generate`
+
+### 6. データベースを作成・初期化
+
+`./vendor/bin/sail artisan migrate:fresh --seed`
+
+### 7. npmパッケージをインストール
+
+`npm install`
+
+### 8. Viteを起動
+
+`npm run dev`
+
+## 初期ログイン情報
+
+| 項目           | 内容                                            |
+| -------------- | ----------------------------------------------- |
+| メールアドレス | [yamada@example.com](mailto:yamada@example.com) |
+| パスワード     | password                                        |
+
+## 使用技術
+
+- PHP 8.5.7
+- Laravel 10.50.2
+- Laravel Sail
+- MySQL 8.4
+- Laravel Sanctum
+- Blade
+- Tailwind CSS
+- Alpine.js
+- Vite
+- Google Books API
+- Mailpit
+- PHPUnit
+
+## API
+
+### 認証
+
+ログインAPIで取得したトークンを、Bearer Tokenとして使用します。
+
+| メソッド | エンドポイント         | 内容         | 認証 |
+| -------- | ---------------------- | ------------ | ---- |
+| POST     | `/api/v1/login`        | ログイン     | 不要 |
+| GET      | `/api/v1/books`        | 書籍一覧取得 | 必要 |
+| GET      | `/api/v1/books/{book}` | 書籍詳細取得 | 必要 |
+| POST     | `/api/v1/books`        | 書籍登録     | 必要 |
+| PUT      | `/api/v1/books/{book}` | 書籍更新     | 必要 |
+| DELETE   | `/api/v1/books/{book}` | 書籍削除     | 必要 |
+
+## バッチ・スケジュール
+
+読書計画の期限超過処理を実行します。
+
+`./vendor/bin/sail artisan app:update-overdue-reading-plans`
+
+読書計画のリマインダー通知を送信します。
+
+`./vendor/bin/sail artisan app:send-reading-plan-reminders`
+
+Laravelのスケジューラーを起動します。
+
+`./vendor/bin/sail artisan schedule:work`
+
+## 開発環境のURL
+
+- アプリケーション：http://localhost
+- Vite：http://localhost:5173
+- phpMyAdmin：http://localhost:8080
+- Mailpit：http://localhost:8025
+
+## 作成者
+
+松澤薫

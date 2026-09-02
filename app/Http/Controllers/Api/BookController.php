@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\BookIndexRequest;
 use App\Http\Requests\Api\BookStoreRequest;
+use App\Http\Requests\Api\BookUpdateRequest;
 use App\Models\Book;
 use App\Http\Resources\BookResource;
 
@@ -34,8 +35,19 @@ class BookController extends Controller
                 });
             })
 
-            // 新しい書籍から順番に並べる
-            ->latest()
+            // 並び順を指定
+            ->when($request->sort === 'latest', function ($query) {
+                $query->latest('published_date');
+            })
+            ->when($request->sort === 'oldest', function ($query) {
+                $query->oldest('published_date');
+            })
+            ->when($request->sort === 'title', function ($query) {
+                $query->orderBy('title');
+            })
+            ->when($request->sort === 'rating', function ($query) {
+                $query->orderByDesc('reviews_avg_rating');
+            })
 
             // 1ページあたりの件数を指定
             ->paginate(
@@ -86,5 +98,48 @@ class BookController extends Controller
             new BookResource($book->load('genres')),
             201
         );
+    }
+        // 書籍を更新
+    public function update(BookUpdateRequest $request, Book $book)
+    {
+        // バリデーション済みのデータを取得
+        $validated = $request->validated();
+
+        $this->authorize('update', $book);
+
+        // 書籍情報を更新
+        $book->update([
+            'title' => $validated['title'],
+            'author' => $validated['author'],
+            'isbn' => $validated['isbn'],
+            'published_date' => $validated['published_date'],
+            'description' => $validated['description'] ?? null,
+            'image_url' => $validated['image_url'] ?? null,
+        ]);
+
+        // ジャンルを更新
+        $book->genres()->sync([$validated['genre_id']]);
+
+        // 更新した書籍をJSON形式で返す
+        return response()->json([
+            'message' => '書籍情報を更新しました。',
+            'data' => new BookResource($book->load('genres')),
+        ], 200);
+    }
+        // 書籍を削除
+    public function destroy(Book $book)
+    {
+        $this->authorize('delete', $book);
+
+        // ジャンルとの紐付けを解除
+        $book->genres()->detach();
+
+        // 書籍を削除
+        $book->delete();
+
+        // 削除成功のレスポンス
+        return response()->json([
+            'message' => '書籍および関連データを削除しました。',
+        ], 200);
     }
 }
