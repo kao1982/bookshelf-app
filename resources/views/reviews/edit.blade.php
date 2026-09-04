@@ -15,7 +15,7 @@
 
                     <form action="{{ route('reviews.update', $review) }}" method="POST" novalidate>
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
 
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">評価 <span class="text-red-500">*</span></label>
